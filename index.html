@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>محي الدين لتجارة الأخشاب</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "Tahoma", Arial, sans-serif;
+      background: #f5f6f8;
+      color: #172033;
+    }
+    button, input, select, textarea { font-family: inherit; }
+    button { cursor: pointer; border: 0; }
+    
+    .app { display: flex; min-height: 100vh; }
+    
+    /* SIDEBAR */
+    .sidebar {
+      width: 270px;
+      background: #111827;
+      color: #fff;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      padding: 24px 16px;
+      z-index: 30;
+      transition: transform 0.3s ease;
+    }
+    .logo {
+      padding: 8px 12px 24px;
+      border-bottom: 1px solid #293244;
+      margin-bottom: 20px;
+    }
+    .logo h1 { color: #d6a84f; font-size: 24px; font-weight: 900; }
+    .logo p { color: #9ca3af; font-size: 13px; margin-top: 5px; }
+    
+    .nav-item {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 6px;
+      background: transparent;
+      color: #cbd5e1;
+      border-radius: 12px;
+      text-align: right;
+      font-size: 15px;
+      font-weight: 700;
+      transition: .2s;
+    }
+    .nav-item:hover { background: #1f2937; color: white; }
+    .nav-item.active { background: #d6a84f; color: #111827; }
+    
+    /* MAIN */
+    .main {
+      margin-right: 270px;
+      width: calc(100% - 270px);
+      min-height: 100vh;
+    }
+    .topbar {
+      height: 76px;
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 34px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .topbar h2 { font-size: 20px; }
+    .user { display: flex; align-items: center; gap: 12px; }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #111827;
+      color: #d6a84f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+    }
+    .content { padding: 32px; max-width: 1500px; margin: auto; }
+    
+    /* PAGES */
+    .page { display: none; }
+    .page.active { display: block; }
+    
+    /* STATS */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin: 24px 0;
+    }
+    .stat {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.03);
+    }
+    .stat-top { display: flex; justify-content: space-between; align-items: center; }
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .red { background: #fee2e2; color: #dc2626; }
+    .green { background: #dcfce7; color: #16a34a; }
+    .gold { background: #fef3c7; color: #b45309; }
+    .blue { background: #dbeafe; color: #2563eb; }
+    
+    .stat small { color: #64748b; font-weight: 700; }
+    .stat h3 { font-size: 28px; margin-top: 10px; }
+    
+    /* CARDS */
+    .card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0,0,0,.03);
+    }
+    .card-header {
+      padding: 20px;
+      background: #fafafa;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-header h3 { font-size: 17px; }
+    
+    /* TABLE */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #f8fafc; color: #64748b; font-size: 13px; text-align: right; padding: 15px; }
+    td { padding: 16px 15px; border-top: 1px solid #eef0f3; font-size: 14px; }
+    tr:hover td { background: #fafafa; }
+    
+    .badge { padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; }
+    .badge.red { background: #fee2e2; color: #b91c1c; }
+    .badge.green { background: #dcfce7; color: #15803d; }
+    .badge.gold { background: #fef3c7; color: #a16207; }
+    
+    /* BUTTONS */
+    .btn { padding: 11px 17px; border-radius: 10px; font-weight: 800; font-size: 14px; transition: .2s; }
+    .btn-primary { background: #d6a84f; color: #111827; }
+    .btn-dark { background: #111827; color: #fff; }
+    .btn-danger { background: #fee2e2; color: #dc2626; }
+    .btn-light { background: #f1f5f9; color: #334155; }
+    .btn:hover { opacity: .9; }
+    
+    /* GRID */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    
+    /* FORM */
+    .form-card { background: white; border: 1px solid #e5e7eb; border-radius: 18px; padding: 24px; }
+    .form-group { margin-bottom: 17px; }
+    label { display: block; font-size: 13px; font-weight: 800; margin-bottom: 7px; }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #dbe1e8;
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 12px;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: #d6a84f; background: white; }
+    textarea { min-height: 100px; }
+    
+    /* SEARCH */
+    .search { position: relative; width: 300px; }
+    .search input { padding-right: 40px; background: white; }
+    
+    /* DASHBOARD */
+    .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+    .chart { height: 270px; padding: 25px; display: flex; align-items: flex-end; gap: 14px; }
+    .bar { flex: 1; background: #d6a84f; border-radius: 8px 8px 0 0; position: relative; }
+    .bar span { position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #64748b; }
+    
+    /* MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+    .modal.show { display: flex; }
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 550px;
+      border-radius: 20px;
+      padding: 28px;
+      max-height: 90vh;
+      overflow: auto;
+    }
+    .modal-box.large { max-width: 900px; }
+    
+    /* MOBILE BACKDROP */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 25;
+    }
+    
+    /* MOBILE STYLES */
+    .mobile-menu { display: none; }
+    @media(max-width: 1000px){
+      .sidebar { transform: translateX(100%); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      .main { margin-right: 0; width: 100%; }
+      .mobile-menu { display: block; font-size: 24px; background: none; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media(max-width: 650px){
+      .content { padding: 18px; }
+      .topbar { padding: 0 18px; }
+      .stats { grid-template-columns: 1fr; }
+      .grid-2, .grid-3, .dashboard-grid { grid-template-columns: 1fr; }
+      .search { width: 100%; }
+    }
+
+    /* PRINT STYLES */
+    @media print {
+      .sidebar, .topbar, .btn, .mobile-menu, .search, .sidebar-overlay { display: none !important; }
+      .main { margin-right: 0 !important; width: 100% !important; }
+      .content { padding: 0 !important; }
+      .modal { position: static !important; background: none !important; padding: 0 !important; display: block !important; }
+      .modal-box { max-width: 100% !important; box-shadow: none !important; border: none !important; padding: 0 !important; }
+      body { background: white !important; color: black !important; }
+      .card, .form-card { border: none !important; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <h1>محي الدين</h1>
+        <p>لتجارة الأخشاب</p>
+      </div>
+      <button class="nav-item active" onclick="showPage('dashboard',this)">📊 الرئيسية</button>
+      <button class="nav-item" onclick="showPage('clients',this)">👥 العملاء</button>
+      <button class="nav-item" onclick="showPage('sales',this)">🧾 المبيعات</button>
+      <button class="nav-item" onclick="showPage('payments',this)">💰 التحصيلات</button>
+      <button class="nav-item" onclick="showPage('inventory',this)">📦 المخزون</button>
+      <button class="nav-item" onclick="showPage('reports',this)">📈 التقارير</button>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <header class="topbar">
+        <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+        <h2 id="pageTitle">لوحة التحكم</h2>
+        <div class="user">
+          <div>
+            <strong>محي الدين</strong>
+            <div style="font-size:11px;color:#64748b">مدير النظام</div>
+          </div>
+          <div class="avatar">م</div>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="page active">
+          <h1>صباح الخير 👋</h1>
+          <p style="color:#64748b;margin-top:5px">إليك ملخص أعمال تجارة الأخشاب اليوم</p>
+          
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-top">
+                <div>
+                  <small>إجمالي المديونيات</small>
+                  <h3 style="color:#dc2626">185,500 ج.م</h3>
+                </div>
+                <div class="stat-icon red">↗</div>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-top">
+                <div>
+                  <small>إجمالي التحصيلات</small>
+                  <h3 style="color:#16a34a">92,800 ج.م</h3>
+                </div>
+                <div class="stat-icon green">💰</div>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-top">
+                <div>
+                  <small>قيمة المخزون</small>
+                  <h3>1,285,000 ج.م</h3>
+                </div>
+                <div class="stat-icon gold">📦</div>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-top">
+                <div>
+                  <small>عدد العملاء</small>
+                  <h3>48</h3>
+                </div>
+                <div class="stat-icon blue">👥</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3>حركة المبيعات والتحصيلات</h3>
+                <select style="width:130px">
+                  <option>آخر 7 أيام</option>
+                  <option>هذا الشهر</option>
+                </select>
+              </div>
+              <div class="chart">
+                <div class="bar" style="height:45%"><span>السبت</span></div>
+                <div class="bar" style="height:65%"><span>الأحد</span></div>
+                <div class="bar" style="height:52%"><span>الإثنين</span></div>
+                <div class="bar" style="height:80%"><span>الثلاثاء</span></div>
+                <div class="bar" style="height:58%"><span>الأربعاء</span></div>
+                <div class="bar" style="height:90%"><span>الخميس</span></div>
+                <div class="bar" style="height:70%"><span>الجمعة</span></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3>أكثر العملاء مديونية</h3>
+              </div>
+              <table>
+                <tr>
+                  <td><strong>شركة الحمد للمقاولات</strong></td>
+                  <td><span class="badge red">65,000 ج.م</span></td>
+                </tr>
+                <tr>
+                  <td><strong>ورشة الأمانة للنجارة</strong></td>
+                  <td><span class="badge red">42,500 ج.م</span></td>
+                </tr>
+                <tr>
+                  <td><strong>أحمد محمود</strong></td>
+                  <td><span class="badge red">28,000 ج.م</span></td>
+                </tr>
+                <tr>
+                  <td><strong>مصنع النور</strong></td>
+                  <td><span class="badge red">21,500 ج.م</span></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <br>
+          <div class="card">
+            <div class="card-header">
+              <h3>آخر العمليات</h3>
+              <button class="btn btn-light" onclick="showPage('sales')">عرض الكل</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>التاريخ</th>
+                    <th>العميل</th>
+                    <th>العملية</th>
+                    <th>القيمة</th>
+                    <th>الحالة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>04 سبتمبر 2026</td>
+                    <td><strong>شركة الحمد للمقاولات</strong></td>
+                    <td>بيع أخشاب زان</td>
+                    <td>30,000 ج.م</td>
+                    <td><span class="badge red">مديونية</span></td>
+                  </tr>
+                  <tr>
+                    <td>04 سبتمبر 2026</td>
+                    <td><strong>ورشة الأمانة</strong></td>
+                    <td>تحصيل نقدي</td>
+                    <td>12,000 ج.م</td>
+                    <td><span class="badge green">تم التحصيل</span></td>
+                  </tr>
+                  <tr>
+                    <td>03 سبتمبر 2026</td>
+                    <td><strong>أحمد محمود</strong></td>
+                    <td>بيع أبلكاش</td>
+                    <td>18,500 ج.م</td>
+                    <td><span class="badge red">مديونية</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- CLIENTS -->
+        <section id="clients" class="page">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;gap:15px;flex-wrap:wrap">
+            <div>
+              <h1>العملاء</h1>
+              <p style="color:#64748b">إدارة العملاء وكشوف الحسابات</p>
+            </div>
+            <button class="btn btn-primary" onclick="openModal('clientModal')">＋ إضافة عميل</button>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="search">
+                <input placeholder="🔎 ابحث باسم العميل..." onkeyup="searchTable(this,'clientsTable')">
+              </div>
+              <strong>إجمالي العملاء: <span id="clientCount">4</span></strong>
+            </div>
+            <div class="table-wrap">
+              <table id="clientsTable">
+                <thead>
+                  <tr>
+                    <th>العميل</th>
+                    <th>الهاتف</th>
+                    <th>إجمالي المبيعات</th>
+                    <th>المدفوع</th>
+                    <th>الرصيد</th>
+                    <th>الإجراء</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>شركة الحمد للمقاولات</strong></td>
+                    <td>01012345678</td>
+                    <td>120,000 ج.م</td>
+                    <td>55,000 ج.م</td>
+                    <td><span class="badge red">65,000 ج.م</span></td>
+                    <td><button class="btn btn-light" onclick="openStatement('شركة الحمد للمقاولات', '120,000 ج.م', '55,000 ج.م', '65,000 ج.م')">كشف الحساب</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>ورشة الأمانة للنجارة</strong></td>
+                    <td>01123456789</td>
+                    <td>85,500 ج.م</td>
+                    <td>43,000 ج.م</td>
+                    <td><span class="badge red">42,500 ج.م</span></td>
+                    <td><button class="btn btn-light" onclick="openStatement('ورشة الأمانة للنجارة', '85,500 ج.م', '43,000 ج.م', '42,500 ج.م')">كشف الحساب</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>أحمد محمود</strong></td>
+                    <td>01234567890</td>
+                    <td>48,000 ج.م</td>
+                    <td>20,000 ج.م</td>
+                    <td><span class="badge red">28,000 ج.م</span></td>
+                    <td><button class="btn btn-light" onclick="openStatement('أحمد محمود', '48,000 ج.م', '20,000 ج.م', '28,000 ج.م')">كشف الحساب</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>مصنع النور</strong></td>
+                    <td>01555555555</td>
+                    <td>61,500 ج.م</td>
+                    <td>40,000 ج.م</td>
+                    <td><span class="badge red">21,500 ج.م</span></td>
+                    <td><button class="btn btn-light" onclick="openStatement('مصنع النور', '61,500 ج.م', '40,000 ج.م', '21,500 ج.م')">كشف الحساب</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- SALES -->
+        <section id="sales" class="page">
+          <h1>المبيعات</h1>
+          <p style="color:#64748b;margin:5px 0 22px">تسجيل فواتير بيع جديدة</p>
+          <div class="grid-2">
+            <div class="form-card">
+              <h3 style="margin-bottom:20px">🧾 فاتورة بيع جديدة</h3>
+              <div class="form-group">
+                <label>العميل</label>
+                <select id="saleClient">
+                  <option value="">اختر العميل</option>
+                  <option>شركة الحمد للمقاولات</option>
+                  <option>ورشة الأمانة للنجارة</option> <option>أحمد محمود</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>الصنف</label>
+                <select id="saleProduct">
+                  <option value="">اختر الصنف</option>
+                  <option value="15000">خشب زان روماني</option>
+                  <option value="8500">خشب سويدي موسكي</option>
+                  <option value="180">أبلكاش كوري 3 مم</option>
+                </select>
+              </div>
+              <div class="grid-2">
+                <div class="form-group">
+                  <label>الكمية</label>
+                  <input type="number" id="saleQty" value="1" min="1" oninput="calculateInvoice()">
+                </div>
+                <div class="form-group">
+                  <label>السعر للوحدة</label>
+                  <input type="number" id="salePrice" value="15000" oninput="calculateInvoice()">
+                </div>
+              </div>
+              <div class="grid-2">
+                <div class="form-group">
+                  <label>الخصم</label>
+                  <input type="number" id="saleDiscount" value="0" placeholder="0" oninput="calculateInvoice()">
+                </div>
+                <div class="form-group">
+                  <label>المبلغ المدفوع</label>
+                  <input type="number" id="salePaid" value="10000" placeholder="0" oninput="calculateInvoice()">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>طريقة الدفع</label>
+                <select>
+                  <option>آجل</option>
+                  <option>نقدي</option>
+                  <option>دفع جزئي</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" style="width:100%;padding:15px" onclick="alert('تم حفظ الفاتورة بنجاح!')">حفظ الفاتورة</button>
+            </div>
+            
+            <div class="card">
+              <div class="card-header">
+                <h3>معاينة الفاتورة</h3>
+                <span class="badge gold">#INV-1028</span>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>الصنف</th>
+                    <th>الكمية</th>
+                    <th>السعر</th>
+                  </tr>
+                </thead>
+                <tbody id="invoiceItems">
+                  <tr>
+                    <td>خشب زان روماني</td>
+                    <td><span id="invQty">1</span></td>
+                    <td><span id="invSubtotal">15,000</span> ج.م</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div style="padding:25px;border-top:1px solid #eee">
+                <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+                  <span>الإجمالي قبل الخصم</span>
+                  <strong id="invGross">15,000 ج.م</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+                  <span>الخصم</span>
+                  <strong id="invDiscount" style="color:#dc2626">0 ج.م</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+                  <span>صافي الإجمالي</span>
+                  <strong id="invTotal">15,000 ج.م</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:15px">
+                  <span>المدفوع</span>
+                  <strong style="color:#16a34a" id="invPaid">10,000 ج.م</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:20px;border-top:1px solid #eee;padding-top:10px">
+                  <strong>المتبقي (مديونية)</strong>
+                  <strong style="color:#dc2626" id="invRemaining">5,000 ج.م</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PAYMENTS -->
+        <section id="payments" class="page">
+          <h1>التحصيلات</h1>
+          <p style="color:#64748b;margin:5px 0 22px">تسجيل دفعات العملاء</p>
+          <div class="grid-2">
+            <div class="form-card">
+              <h3 style="margin-bottom:20px">💰 تسجيل دفعة جديدة</h3>
+              <div class="form-group">
+                <label>العميل</label>
+                <select>
+                  <option>اختر العميل</option>
+                  <option>شركة الحمد للمقاولات</option>
+                  <option>ورشة الأمانة للنجارة</option>
+                  <option>أحمد محمود</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>المبلغ</label>
+                <input type="number" placeholder="0.00">
+              </div>
+              <div class="form-group">
+                <label>طريقة الدفع</label>
+                <select>
+                  <option>نقدي</option>
+                  <option>تحويل بنكي</option>
+                  <option>شيك</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>ملاحظات</label>
+                <textarea placeholder="اكتب تفاصيل الدفعة..."></textarea>
+              </div>
+              <button class="btn btn-primary" style="width:100%;padding:15px" onclick="alert('تم تسجيل التحصيل بنجاح!')">تسجيل التحصيل</button>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3>آخر التحصيلات</h3>
+              </div>
+              <table>
+                <tr>
+                  <td><strong>شركة الحمد</strong><br><small>04 سبتمبر 2026</small></td>
+                  <td style="color:#16a34a;font-weight:900">+15,000 ج.م</td>
+                </tr>
+                <tr>
+                  <td><strong>ورشة الأمانة</strong><br><small>03 سبتمبر 2026</small></td>
+                  <td style="color:#16a34a;font-weight:900">+12,000 ج.م</td>
+                </tr>
+                <tr>
+                  <td><strong>أحمد محمود</strong><br><small>02 سبتمبر 2026</small></td>
+                  <td style="color:#16a34a;font-weight:900">+8,000 ج.م</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- INVENTORY -->
+        <section id="inventory" class="page">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:15px">
+            <div>
+              <h1>المخزون</h1>
+              <p style="color:#64748b">إدارة الأخشاب والأصناف والكميات</p>
+            </div>
+            <button class="btn btn-dark" onclick="openModal('productModal')">＋ إضافة صنف</button>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <small>قيمة المخزون</small>
+              <h3>1,285,000 ج.م</h3>
+            </div>
+            <div class="stat">
+              <small>عدد الأصناف</small>
+              <h3 id="productCount">4</h3>
+            </div>
+            <div class="stat">
+              <small>أصناف منخفضة</small>
+              <h3 style="color:#dc2626">1</h3>
+            </div>
+            <div class="stat">
+              <small>حركة اليوم</small>
+              <h3>28</h3>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="search">
+                <input placeholder="🔎 ابحث عن صنف..." onkeyup="searchTable(this,'inventoryTable')">
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table id="inventoryTable">
+                <thead>
+                  <tr>
+                    <th>الصنف</th>
+                    <th>الوحدة</th>
+                    <th>الكمية</th>
+                    <th>تكلفة الوحدة</th>
+                    <th>سعر البيع</th>
+                    <th>قيمة المخزون</th>
+                    <th>الحالة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>خشب زان روماني</strong></td>
+                    <td>متر مكعب</td>
+                    <td>50</td>
+                    <td>14,000 ج.م</td>
+                    <td>15,000 ج.م</td>
+                    <td>750,000 ج.م</td>
+                    <td><span class="badge green">متوفر</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>خشب سويدي موسكي</strong></td>
+                    <td>متر مكعب</td>
+                    <td>120</td>
+                    <td>8,000 ج.م</td>
+                    <td>8,500 ج.م</td>
+                    <td>1,020,000 ج.م</td>
+                    <td><span class="badge green">متوفر</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>أبلكاش كوري 3 مم</strong></td>
+                    <td>لوح</td>
+                    <td>500</td>
+                    <td>160 ج.م</td>
+                    <td>180 ج.م</td>
+                    <td>90,000 ج.م</td>
+                    <td><span class="badge green">متوفر</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>خشب موسكي درجة أولى</strong></td>
+                    <td>متر مكعب</td>
+                    <td>12</td>
+                    <td>7,500 ج.م</td>
+                    <td>8,000 ج.م</td>
+                    <td>96,000 ج.م</td>
+                    <td><span class="badge red">مخزون منخفض</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- REPORTS -->
+        <section id="reports" class="page">
+          <h1>التقارير</h1>
+          <p style="color:#64748b;margin:5px 0 22px">تقارير مالية وتشغيلية</p>
+          <div class="grid-3">
+            <div class="form-card">
+              <h3>📊 تقرير المبيعات</h3>
+              <p style="color:#64748b;margin:10px 0 20px">إجمالي المبيعات خلال الفترة المحددة</p>
+              <h2>428,500 ج.م</h2>
+              <br>
+              <button class="btn btn-dark" onclick="window.print()">عرض وطباعة التقرير</button>
+            </div>
+            <div class="form-card">
+              <h3>💰 تقرير التحصيلات</h3>
+              <p style="color:#64748b;margin:10px 0 20px">إجمالي المبالغ المحصلة</p>
+              <h2 style="color:#16a34a">212,800 ج.م</h2>
+              <br>
+              <button class="btn btn-dark" onclick="window.print()">عرض وطباعة التقرير</button>
+            </div>
+            <div class="form-card">
+              <h3>👥 تقرير المديونيات</h3>
+              <p style="color:#64748b;margin:10px 0 20px">إجمالي أرصدة العملاء</p>
+              <h2 style="color:#dc2626">185,500 ج.م</h2>
+              <br>
+              <button class="btn btn-dark" onclick="window.print()">عرض وطباعة التقرير</button>
+            </div>
+          </div>
+          <br>
+          <div class="card">
+            <div class="card-header">
+              <h3>الفترة الزمنية</h3>
+            </div>
+            <div style="padding:20px;display:flex;gap:15px;flex-wrap:wrap">
+              <input type="date" id="startDate">
+              <input type="date" id="endDate">
+              <button class="btn btn-primary" onclick="alert('تم تطبيق الفلتر')">تطبيق الفلتر</button>
+              <button class="btn btn-light" onclick="window.print()">🖨 طباعة التقرير</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- CLIENT MODAL -->
+  <div id="clientModal" class="modal">
+    <div class="modal-box">
+      <h2>إضافة عميل جديد</h2>
+      <br>
+      <div class="form-group">
+        <label>اسم العميل</label>
+        <input id="newClientName" placeholder="مثال: شركة النور للمقاولات">
+      </div>
+      <div class="form-group">
+        <label>رقم الهاتف</label>
+        <input id="newClientPhone" placeholder="01XXXXXXXXX">
+      </div>
+      <div class="form-group">
+        <label>الرصيد الافتتاحي (مديونية)</label>
+        <input id="newClientBalance" type="number" placeholder="0">
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-light" onclick="closeModal('clientModal')">إلغاء</button>
+        <button class="btn btn-primary" onclick="addNewClient()">حفظ العميل</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT MODAL -->
+  <div id="productModal" class="modal">
+    <div class="modal-box">
+      <h2>إضافة صنف جديد</h2>
+      <br>
+      <div class="form-group">
+        <label>اسم الصنف</label>
+        <input id="newProdName" placeholder="مثال: خشب زان روماني">
+      </div>
+      <div class="form-group">
+        <label>الوحدة</label>
+        <select id="newProdUnit">
+          <option>متر مكعب</option>
+          <option>متر</option>
+          <option>لوح</option>
+          <option>قطعة</option>
+        </select>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>الكمية</label>
+          <input id="newProdQty" type="number" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>تكلفة الوحدة</label>
+          <input id="newProdCost" type="number" placeholder="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>سعر البيع</label>
+        <input id="newProdPrice" type="number" placeholder="0">
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-light" onclick="closeModal('productModal')">إلغاء</button>
+        <button class="btn btn-primary" onclick="addNewProduct()">حفظ الصنف</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATEMENT MODAL -->
+  <div id="statementModal" class="modal">
+    <div class="modal-box large">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2 id="statementName">كشف الحساب</h2>
+        <button class="btn btn-light" onclick="window.print()">🖨 طباعة</button>
+      </div>
+      <br>
+      <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+        <div class="stat">
+          <small>إجمالي المبيعات</small>
+          <h3 id="stmtSales">0 ج.م</h3>
+        </div>
+        <div class="stat">
+          <small>إجمالي المدفوع</small>
+          <h3 style="color:#16a34a" id="stmtPaid">0 ج.م</h3>
+        </div>
+        <div class="stat">
+          <small>الرصيد المستحق</small>
+          <h3 style="color:#dc2626" id="stmtBalance">0 ج.م</h3>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>التاريخ</th>
+              <th>البيان</th>
+              <th>مدين</th>
+              <th>دائن</th>
+              <th>الرصيد</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>01/09/2026</td>
+              <td>رصيد افتتاحي</td>
+              <td>-</td>
+              <td>-</td>
+              <td>20,000 ج.م</td>
+            </tr>
+            <tr>
+              <td>02/09/2026</td>
+              <td>فاتورة بيع #1024</td>
+              <td>30,000 ج.م</td>
+              <td>-</td>
+              <td>50,000 ج.م</td>
+            </tr>
+            <tr>
+              <td>03/09/2026</td>
+              <td>فاتورة بيع #1027</td>
+              <td>25,000 ج.م</td>
+              <td>-</td>
+              <td>75,000 ج.م</td>
+            </tr>
+            <tr>
+              <td>04/09/2026</td>
+              <td>دفعة نقدية</td>
+              <td>-</td>
+              <td>10,000 ج.م</td>
+              <td>65,000 ج.م</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <br>
+      <button class="btn btn-light" onclick="closeModal('statementModal')">إغلاق</button>
+    </div>
+  </div>
+
+  <script>
+    function showPage(page, button) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.getElementById(page).classList.add("active");
+      
+      document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+      if (button) button.classList.add("active");
+
+      const titles = {
+        dashboard: "لوحة التحكم",
+        clients: "العملاء",
+        sales: "المبيعات",
+        payments: "التحصيلات",
+        inventory: "المخزون",
+        reports: "التقارير"
+      };
+      document.getElementById("pageTitle").innerText = titles[page];
+      
+      // Close sidebar on mobile
+      document.getElementById("sidebar").classList.remove("open");
+      document.getElementById("sidebarOverlay").classList.remove("open");
+      window.scrollTo(0, 0);
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+      document.getElementById("sidebarOverlay").classList.toggle("open");
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add("show");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("show");
+    }
+
+    function openStatement(name, sales, paid, balance) {
+      document.getElementById("statementName").innerText = "كشف حساب — " + name;
+      document.getElementById("stmtSales").innerText = sales || "0 ج.م";
+      document.getElementById("stmtPaid").innerText = paid || "0 ج.م";
+      document.getElementById("stmtBalance").innerText = balance || "0 ج.م";
+      openModal("statementModal");
+    }
+
+    function searchTable(input, tableId) {
+      const filter = input.value.toLowerCase();
+      const rows = document.querySelectorAll("#" + tableId + " tbody tr");
+      rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(filter) ? "" : "none";
+      });
+    }
+
+    // Dynamic Sales Calculator
+    document.getElementById("saleProduct").addEventListener("change", function() {
+      if(this.value) {
+        document.getElementById("salePrice").value = this.value;
+        calculateInvoice();
+      }
+    });
+
+    function calculateInvoice() {
+      const qty = parseFloat(document.getElementById("saleQty").value) || 0;
+      const price = parseFloat(document.getElementById("salePrice").value) || 0;
+      const discount = parseFloat(document.getElementById("saleDiscount").value) || 0;
+      const paid = parseFloat(document.getElementById("salePaid").value) || 0;
+
+      const subtotal = qty * price;
+      const total = Math.max(0, subtotal - discount);
+      const remaining = Math.max(0, total - paid);
+
+      document.getElementById("invQty").innerText = qty;
+      document.getElementById("invSubtotal").innerText = subtotal.toLocaleString();
+      document.getElementById("invGross").innerText = subtotal.toLocaleString() + " ج.م";
+      document.getElementById("invDiscount").innerText = discount.toLocaleString() + " ج.م";
+      document.getElementById("invTotal").innerText = total.toLocaleString() + " ج.م";
+      document.getElementById("invPaid").innerText = paid.toLocaleString() + " ج.م";
+      document.getElementById("invRemaining").innerText = remaining.toLocaleString() + " ج.م";
+    }
+
+    // Add New Client Dynamically
+    function addNewClient() {
+      const name = document.getElementById("newClientName").value.trim();
+      const phone = document.getElementById("newClientPhone").value.trim();
+      const bal = parseFloat(document.getElementById("newClientBalance").value) || 0;
+
+      if (!name) { alert("يرجى إدخال اسم العميل"); return; }
+
+      const tbody = document.querySelector("#clientsTable tbody");
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><strong>${name}</strong></td>
+        <td>${phone || '-'}</td>
+        <td>${bal.toLocaleString()} ج.م</td>
+        <td>0 ج.م</td>
+        <td><span class="badge red">${bal.toLocaleString()} ج.م</span></td>
+        <td><button class="btn btn-light" onclick="openStatement('${name}', '${bal.toLocaleString()} ج.م', '0 ج.م', '${bal.toLocaleString()} ج.م')">كشف الحساب</button></td>
+      `;
+      tbody.prepend(tr);
+
+      // Update count
+      const countEl = document.getElementById("clientCount");
+      countEl.innerText = parseInt(countEl.innerText) + 1;
+
+      // Clear & Close
+      document.getElementById("newClientName").value = "";
+      document.getElementById("newClientPhone").value = "";
+      document.getElementById("newClientBalance").value = "";
+      closeModal("clientModal");
+    }
+
+    // Add New Product Dynamically
+    function addNewProduct() {
+      const name = document.getElementById("newProdName").value.trim();
+      const unit = document.getElementById("newProdUnit").value;
+      const qty = parseFloat(document.getElementById("newProdQty").value) || 0;
+      const cost = parseFloat(document.getElementById("newProdCost").value) || 0;
+      const price = parseFloat(document.getElementById("newProdPrice").value) || 0;
+
+      if (!name) { alert("يرجى إدخال اسم الصنف"); return; }
+
+      const totalValue = qty * cost;
+      const badgeClass = qty < 15 ? "badge red" : "badge green";
+      const badgeText = qty < 15 ? "مخزون منخفض" : "متوفر";
+
+      const tbody = document.querySelector("#inventoryTable tbody");
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><strong>${name}</strong></td>
+        <td>${unit}</td>
+        <td>${qty}</td>
+        <td>${cost.toLocaleString()} ج.م</td>
+        <td>${price.toLocaleString()} ج.م</td>
+        <td>${totalValue.toLocaleString()} ج.م</td>
+        <td><span class="${badgeClass}">${badgeText}</span></td>
+      `;
+      tbody.prepend(tr);
+
+      // Update count
+      const countEl = document.getElementById("productCount");
+      countEl.innerText = parseInt(countEl.innerText) + 1;
+
+      // Clear & Close
+      document.getElementById("newProdName").value = "";
+      document.getElementById("newProdQty").value = "";
+      document.getElementById("newProdCost").value = "";
+      document.getElementById("newProdPrice").value = "";
+      closeModal("productModal");
+    }
+
+    // Close Modals on Overlay Click
+    document.querySelectorAll(".modal").forEach(modal => {
+      modal.addEventListener("click", function(e) {
+        if (e.target === modal) modal.classList.remove("show");
+      });
+    });
+  </script>
+</body>
+</html>
