@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>محي الدين لتجارة الأخشاب</title>
-  <!-- استدعاء خط Cairo الاحترافي -->
+  <title>محي الدين - إدارة المديونيات والتحصيلات</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -42,7 +41,7 @@
       border-bottom: 1px solid #1e293b;
       margin-bottom: 20px;
     }
-    .logo h1 { color: #eab308; font-size: 24px; font-weight: 900; line-height: 1.2; }
+    .logo h1 { color: #eab308; font-size: 22px; font-weight: 900; line-height: 1.2; }
     .logo p { color: #94a3b8; font-size: 13px; margin-top: 4px; font-weight: 500; }
 
     .nav-item {
@@ -101,7 +100,7 @@
     /* STATS */
     .stats {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 18px;
       margin: 24px 0;
     }
@@ -146,6 +145,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     .card-header h3 { font-size: 17px; font-weight: 800; }
 
@@ -296,13 +297,12 @@
     <aside class="sidebar" id="sidebar">
       <div class="logo">
         <h1>محي الدين</h1>
-        <p>لتجارة الأخشاب</p>
+        <p>إدارة المديونيات والتحصيلات</p>
       </div>
       <button class="nav-item active" onclick="showPage('dashboard',this)">📊 الرئيسية</button>
       <button class="nav-item" onclick="showPage('clients',this)">👥 العملاء وكشوف الحساب</button>
-      <button class="nav-item" onclick="showPage('sales',this)">🧾 المبيعات والفواتير</button>
+      <button class="nav-item" onclick="showPage('debts',this)">🧾 تسجيل مديونية جديدة</button>
       <button class="nav-item" onclick="showPage('payments',this)">💰 التحصيلات والدفعات</button>
-      <button class="nav-item" onclick="showPage('inventory',this)">📦 إدارة المخزون</button>
       <button class="nav-item" onclick="showPage('reports',this)">📈 التقارير المالية</button>
 
       <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid #1e293b;">
@@ -328,7 +328,7 @@
         <!-- DASHBOARD -->
         <section id="dashboard" class="page active">
           <h1 style="font-weight:900">مرحباً بك 👋</h1>
-          <p style="color:#64748b;margin-top:2px;font-weight:600">ملخص عمليات تجارة الأخشاب ومتابعة الآجل</p>
+          <p style="color:#64748b;margin-top:2px;font-weight:600">ملخص المديونيات والتحصيلات الخاصة بالعملاء</p>
 
           <div class="stats">
             <div class="stat">
@@ -347,15 +347,6 @@
                   <h3 style="color:#16a34a" id="dashTotalPaid">0 ج.م</h3>
                 </div>
                 <div class="stat-icon green">💰</div>
-              </div>
-            </div>
-            <div class="stat">
-              <div class="stat-top">
-                <div>
-                  <small>قيمة الأخشاب بالمخزن</small>
-                  <h3 id="dashStockValue">0 ج.م</h3>
-                </div>
-                <div class="stat-icon gold">📦</div>
               </div>
             </div>
             <div class="stat">
@@ -427,7 +418,7 @@
                     <th>اسم العميل</th>
                     <th>الهاتف</th>
                     <th>تاريخ الإضافة</th>
-                    <th>إجمالي الفواتير</th>
+                    <th>إجمالي المديونية</th>
                     <th>المسدد</th>
                     <th>الرصيد المتبقي</th>
                     <th>الإجراءات</th>
@@ -439,98 +430,57 @@
           </div>
         </section>
 
-        <!-- SALES -->
-        <section id="sales" class="page">
-          <h1 style="font-weight:900">تسجيل الفواتير والمبيعات</h1>
-          <p style="color:#64748b;margin:2px 0 22px;font-weight:600">إنشاء فاتورة بيع جديدة وحفظها بتاريخ وساعة التسجيل</p>
+        <!-- DEBTS (replaces sales/invoices) -->
+        <section id="debts" class="page">
+          <h1 style="font-weight:900">تسجيل مديونية جديدة</h1>
+          <p style="color:#64748b;margin:2px 0 22px;font-weight:600">تسجيل مبلغ مستحق على عميل بتاريخ وساعة التسجيل</p>
           <div class="grid-2">
             <div class="form-card">
-              <h3 style="margin-bottom:18px;font-weight:800">🧾 فاتورة بيع أخشاب</h3>
+              <h3 style="margin-bottom:18px;font-weight:800">🧾 مديونية / مستحقات جديدة</h3>
               <div class="form-group">
-                <label>تاريخ ووقت الفاتورة</label>
-                <input type="datetime-local" id="saleCustomDate">
+                <label>تاريخ ووقت العملية</label>
+                <input type="datetime-local" id="debtCustomDate">
               </div>
-              <div class="form-group" id="saleClientGroup">
+              <div class="form-group" id="debtClientGroup">
                 <label>العميل</label>
-                <select id="saleClientSelect">
+                <select id="debtClientSelect">
                   <option value="">اختر العميل</option>
                 </select>
                 <div class="field-error">يرجى اختيار العميل</div>
               </div>
-              <div class="form-group" id="saleProductGroup">
-                <label>الصنف من المخزن</label>
-                <select id="saleProductSelect" onchange="onProductSelectChange()">
-                  <option value="">اختر الصنف</option>
-                </select>
-                <div class="field-error">يرجى اختيار الصنف</div>
+              <div class="form-group" id="debtAmountGroup">
+                <label>المبلغ المستحق (ج.م)</label>
+                <input type="number" id="debtAmount" min="0" placeholder="0" oninput="calculateDebt()">
+                <div class="field-error">أدخل مبلغاً صحيحاً أكبر من صفر</div>
               </div>
-              <div class="grid-2">
-                <div class="form-group" id="saleQtyGroup">
-                  <label>الكمية المباعة</label>
-                  <input type="number" id="saleQty" value="1" min="1" step="1" oninput="calculateInvoice()">
-                  <div class="field-error">أدخل كمية صحيحة أكبر من صفر</div>
-                </div>
-                <div class="form-group">
-                  <label>سعر البيع للوحدة (ج.م)</label>
-                  <input type="number" id="salePrice" value="0" min="0" oninput="calculateInvoice()">
-                </div>
+              <div class="form-group">
+                <label>المبلغ المدفوع الآن (اختياري) (ج.م)</label>
+                <input type="number" id="debtPaidNow" min="0" placeholder="0" oninput="calculateDebt()">
               </div>
-              <div class="grid-2">
-                <div class="form-group">
-                  <label>الخصم (ج.م)</label>
-                  <input type="number" id="saleDiscount" value="0" min="0" placeholder="0" oninput="calculateInvoice()">
-                </div>
-                <div class="form-group">
-                  <label>المبلغ المدفوع كاش (ج.م)</label>
-                  <input type="number" id="salePaid" value="0" min="0" placeholder="0" oninput="calculateInvoice()">
-                </div>
+              <div class="form-group">
+                <label>البيان / التفاصيل</label>
+                <input id="debtDetails" placeholder="مثال: مستحقات شهر أغسطس">
               </div>
-              <button class="btn btn-primary" style="width:100%;padding:14px" onclick="saveInvoice()">حفظ الفاتورة وخصم المخزون</button>
+              <button class="btn btn-primary" style="width:100%;padding:14px" onclick="saveDebt()">حفظ المديونية وتحديث حساب العميل</button>
             </div>
 
-            <div>
-              <div class="card">
-                <div class="card-header">
-                  <h3>معاينة الفاتورة</h3>
-                  <span class="badge gold">جديدة</span>
+            <div class="card">
+              <div class="card-header">
+                <h3>معاينة العملية</h3>
+                <span class="badge gold">جديدة</span>
+              </div>
+              <div style="padding:20px;font-size:14px">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                  <span>المبلغ المستحق:</span>
+                  <strong id="debtPreviewAmount">0 ج.م</strong>
                 </div>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>الصنف</th>
-                      <th>الكمية</th>
-                      <th>الإجمالي</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td id="invProdName">-</td>
-                      <td><span id="invQty">1</span></td>
-                      <td><span id="invSubtotal">0</span> ج.م</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div style="padding:20px;border-top:1px solid #e2e8f0;font-size:14px">
-                  <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-                    <span>الإجمالي قبل الخصم:</span>
-                    <strong id="invGross">0 ج.م</strong>
-                  </div>
-                  <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-                    <span>الخصم:</span>
-                    <strong id="invDiscount" style="color:#dc2626">0 ج.م</strong>
-                  </div>
-                  <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-                    <span>صافي الفاتورة:</span>
-                    <strong id="invTotal">0 ج.م</strong>
-                  </div>
-                  <div style="display:flex;justify-content:space-between;margin-bottom:12px">
-                    <span>المبلغ المدفوع:</span>
-                    <strong style="color:#16a34a" id="invPaid">0 ج.م</strong>
-                  </div>
-                  <div style="display:flex;justify-content:space-between;font-size:18px;border-top:1px dashed #cbd5e1;padding-top:10px">
-                    <strong>الآجل المتبقي على العميل:</strong>
-                    <strong style="color:#dc2626" id="invRemaining">0 ج.م</strong>
-                  </div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+                  <span>المدفوع الآن:</span>
+                  <strong style="color:#16a34a" id="debtPreviewPaid">0 ج.م</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:18px;border-top:1px dashed #cbd5e1;padding-top:10px">
+                  <strong>المتبقي الآجل على العميل:</strong>
+                  <strong style="color:#dc2626" id="debtPreviewRemaining">0 ج.م</strong>
                 </div>
               </div>
             </div>
@@ -538,16 +488,16 @@
 
           <div class="card">
             <div class="card-header">
-              <h3>سجل الفواتير السابقة (مرتبة بالتاريخ)</h3>
+              <h3>سجل المديونيات السابقة (مرتبة بالتاريخ)</h3>
             </div>
             <div class="table-wrap">
-              <table id="salesHistoryTable">
+              <table id="debtsHistoryTable">
                 <thead>
                   <tr>
                     <th>التاريخ والوقت</th>
                     <th>العميل</th>
-                    <th>تفاصيل الفاتورة</th>
-                    <th>الإجمالي</th>
+                    <th>البيان</th>
+                    <th>المبلغ المستحق</th>
                     <th>المدفوع</th>
                     <th>المتبقي</th>
                     <th>إجراء</th>
@@ -619,60 +569,15 @@
           </div>
         </section>
 
-        <!-- INVENTORY -->
-        <section id="inventory" class="page">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:15px">
-            <div>
-              <h1 style="font-weight:900">إدارة المخزون</h1>
-              <p style="color:#64748b;font-weight:600">متابعة الأخشاب والأصناف والكميات المتوفرة</p>
-            </div>
-            <button class="btn btn-dark" onclick="openModal('productModal')">＋ إضافة صنف جديد للمخزن</button>
-          </div>
-          <div class="stats">
-            <div class="stat">
-              <small>قيمة المخزون بسعر التكلفة</small>
-              <h3 id="invStockTotalVal">0 ج.م</h3>
-            </div>
-            <div class="stat">
-              <small>إجمالي الأصناف</small>
-              <h3 id="productCount">0</h3>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header">
-              <div class="search">
-                <input placeholder="🔎 ابحث عن صنف..." onkeyup="searchTable(this,'inventoryTable')">
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table id="inventoryTable">
-                <thead>
-                  <tr>
-                    <th>اسم الصنف</th>
-                    <th>الوحدة</th>
-                    <th>الكمية المتاحة</th>
-                    <th>تكلفة الشراء</th>
-                    <th>سعر البيع</th>
-                    <th>إجمالي القيمة</th>
-                    <th>الحالة</th>
-                    <th>الإجراء</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
         <!-- REPORTS -->
         <section id="reports" class="page">
           <h1 style="font-weight:900">التقارير المالية والملخصات</h1>
-          <p style="color:#64748b;margin:2px 0 22px;font-weight:600">تقارير شاملة عن المبيعات والديون المتبقية</p>
+          <p style="color:#64748b;margin:2px 0 22px;font-weight:600">تقارير شاملة عن المديونيات والتحصيلات</p>
           <div class="grid-3">
             <div class="form-card">
-              <h3>📊 تقرير المبيعات الإجمالي</h3>
-              <p style="color:#64748b;margin:10px 0 15px">إجمالي قيمة الفواتير</p>
-              <h2 id="rptSales">0 ج.م</h2>
+              <h3>📊 تقرير المديونيات الإجمالي</h3>
+              <p style="color:#64748b;margin:10px 0 15px">إجمالي المبالغ المسجلة كمستحقات</p>
+              <h2 id="rptDebtsIssued">0 ج.م</h2>
               <br>
               <button class="btn btn-dark" onclick="window.print()">🖨 طباعة التقرير</button>
             </div>
@@ -685,7 +590,7 @@
             </div>
             <div class="form-card">
               <h3>👥 تقرير المديونيات الآجلة</h3>
-              <p style="color:#64748b;margin:10px 0 15px">إجمالي المستحق على العملاء</p>
+              <p style="color:#64748b;margin:10px 0 15px">إجمالي المستحق على العملاء حالياً</p>
               <h2 style="color:#dc2626" id="rptDebts">0 ج.م</h2>
               <br>
               <button class="btn btn-dark" onclick="window.print()">🖨 طباعة التقرير</button>
@@ -703,7 +608,7 @@
       <br>
       <div class="form-group" id="newClientNameGroup">
         <label>اسم العميل</label>
-        <input id="newClientName" placeholder="مثال: ورشة الأمانة - أحمد محمود">
+        <input id="newClientName" placeholder="مثال: أحمد محمود">
         <div class="field-error">يرجى إدخال اسم العميل</div>
       </div>
       <div class="form-group">
@@ -721,42 +626,14 @@
     </div>
   </div>
 
-  <!-- PRODUCT MODAL -->
-  <div id="productModal" class="modal">
-    <div class="modal-box">
-      <h2 style="font-weight:900">إضافة صنف جديد للمخزن</h2>
-      <br>
-      <div class="form-group" id="newProdNameGroup">
-        <label>اسم صنف الخشب</label>
-        <input id="newProdName" placeholder="مثال: خشب سويدي 2*4">
-        <div class="field-error">يرجى كتابة اسم صنف الخشب</div>
-      </div>
-      <div class="form-group">
-        <label>وحدة القياس</label>
-        <select id="newProdUnit">
-          <option>متر مكعب</option>
-          <option>متر طولي</option>
-          <option>لوح</option>
-          <option>قطعة</option>
-        </select>
-      </div>
-      <div class="grid-2">
-        <div class="form-group">
-          <label>الكمية الأولية</label>
-          <input id="newProdQty" type="number" min="0" placeholder="0">
-        </div>
-        <div class="form-group">
-          <label>تكلفة الشراء (ج.م)</label>
-          <input id="newProdCost" type="number" min="0" placeholder="0">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>سعر البيع المقترح (ج.م)</label>
-        <input id="newProdPrice" type="number" min="0" placeholder="0">
-      </div>
-      <div style="display:flex;gap:10px;justify-content:flex-end">
-        <button class="btn btn-light" onclick="closeModal('productModal')">إلغاء</button>
-        <button class="btn btn-primary" onclick="addNewProduct()">حفظ الصنف</button>
+  <!-- CUSTOM CONFIRM MODAL (replaces window.confirm which some preview sandboxes block) -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-box" style="max-width:420px;text-align:center">
+      <div style="font-size:40px;margin-bottom:10px">⚠️</div>
+      <h3 id="confirmMessage" style="font-weight:800;margin-bottom:22px;line-height:1.6"></h3>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button class="btn btn-light" onclick="closeConfirm()">إلغاء</button>
+        <button class="btn" id="confirmActionBtn" style="background:#dc2626;color:#fff">تأكيد الحذف</button>
       </div>
     </div>
   </div>
@@ -777,7 +654,7 @@
 
       <div class="stats" style="grid-template-columns:repeat(3,1fr);margin:20px 0">
         <div class="stat">
-          <small>إجمالي المبيعات (مدين)</small>
+          <small>إجمالي المديونيات (مدين)</small>
           <h3 id="stmtSalesTotal">0 ج.م</h3>
         </div>
         <div class="stat">
@@ -798,7 +675,7 @@
               <th>التاريخ والوقت</th>
               <th>نوع الحركة</th>
               <th>البيان والتفاصيل</th>
-              <th>قيمة الفاتورة (+مدين)</th>
+              <th>قيمة المديونية (+مدين)</th>
               <th>المسدد (-دائن)</th>
               <th>الرصيد بعد الحركة</th>
             </tr>
@@ -814,9 +691,8 @@
     // STORAGE KEYS (namespaced so resetAllData never touches other apps)
     // ==================================================================
     const STORAGE_KEYS = {
-      clients: "wood_clients_v2",
-      inventory: "wood_inventory_v2",
-      transactions: "wood_transactions_v2"
+      clients: "debts_clients_v1",
+      transactions: "debts_transactions_v1"
     };
 
     // --- INITIAL DATA ARCHITECTURE ---
@@ -825,19 +701,13 @@
       { id: "c2", name: "ورشة الأمانة للنجارة", phone: "01123456789", createdAt: "2026-08-10T14:15" }
     ];
 
-    const DEFAULT_INVENTORY = [
-      { id: "p1", name: "خشب زان روماني", unit: "متر مكعب", qty: 45, cost: 14000, price: 15500 },
-      { id: "p2", name: "خشب سويدي موسكي", unit: "متر مكعب", qty: 110, cost: 8000, price: 8800 },
-      { id: "p3", name: "أبلكاش كوري 3 مم", unit: "لوح", qty: 420, cost: 160, price: 185 }
-    ];
-
     const DEFAULT_TRANSACTIONS = [
       {
         id: "t1",
         date: "2026-08-15T11:20",
         clientId: "c1",
-        type: "sale",
-        details: "شراء: خشب زان روماني (5 متر مكعب)",
+        type: "debt",
+        details: "مستحقات شهر أغسطس",
         amount: 77500,
         paid: 20000
       },
@@ -855,8 +725,8 @@
         id: "t3",
         date: "2026-08-25T09:10",
         clientId: "c2",
-        type: "sale",
-        details: "شراء: خشب سويدي موسكي (10 متر مكعب)",
+        type: "debt",
+        details: "مستحقات شهر أغسطس",
         amount: 88000,
         paid: 30000
       }
@@ -876,13 +746,11 @@
     }
 
     let clients = safeLoad(STORAGE_KEYS.clients, DEFAULT_CLIENTS);
-    let inventory = safeLoad(STORAGE_KEYS.inventory, DEFAULT_INVENTORY);
     let transactions = safeLoad(STORAGE_KEYS.transactions, DEFAULT_TRANSACTIONS);
 
     function saveState(skipDropdownReset) {
       try {
         localStorage.setItem(STORAGE_KEYS.clients, JSON.stringify(clients));
-        localStorage.setItem(STORAGE_KEYS.inventory, JSON.stringify(inventory));
         localStorage.setItem(STORAGE_KEYS.transactions, JSON.stringify(transactions));
       } catch (e) {
         console.error("تعذر حفظ البيانات", e);
@@ -893,16 +761,14 @@
 
     // Only clears THIS app's keys, never the whole localStorage of the domain
     function resetAllData() {
-      if (confirm("هل أنت متأكد من إعادة ضبط البيانات للوضع الافتراضي؟ سيتم حذف جميع التعديلات.")) {
+      askConfirm("هل أنت متأكد من إعادة ضبط البيانات للوضع الافتراضي؟ سيتم حذف جميع التعديلات.", function () {
         localStorage.removeItem(STORAGE_KEYS.clients);
-        localStorage.removeItem(STORAGE_KEYS.inventory);
         localStorage.removeItem(STORAGE_KEYS.transactions);
         clients = JSON.parse(JSON.stringify(DEFAULT_CLIENTS));
-        inventory = JSON.parse(JSON.stringify(DEFAULT_INVENTORY));
         transactions = JSON.parse(JSON.stringify(DEFAULT_TRANSACTIONS));
         saveState();
         showToast("تم استعادة البيانات الافتراضية بنجاح", "success");
-      }
+      });
     }
 
     // --- SECURITY: escape any user-entered text before injecting into innerHTML ---
@@ -935,17 +801,17 @@
 
     // --- HELPER FUNCTIONS FOR CALCULATIONS ---
     function getClientTotals(clientId) {
-      let sales = 0;
+      let debts = 0;
       let paid = 0;
       transactions.filter(t => t.clientId === clientId).forEach(t => {
-        if (t.type === 'sale') {
-          sales += (t.amount || 0);
+        if (t.type === 'debt') {
+          debts += (t.amount || 0);
           paid += (t.paid || 0);
         } else if (t.type === 'payment') {
           paid += (t.paid || 0);
         }
       });
-      return { sales, paid, balance: sales - paid };
+      return { sales: debts, paid, balance: debts - paid };
     }
 
     function getCurrentFormattedDate() {
@@ -965,13 +831,12 @@
 
     // --- RENDER APPLICATION ---
     // skipDropdownReset: when true, keeps whatever the user already typed/selected
-    // in the sale & payment forms (dates + selections) instead of wiping them out.
+    // in the debt & payment forms (dates + selections) instead of wiping them out.
     function renderAll(skipDropdownReset) {
       renderClients();
-      renderInventory();
       renderDropdowns(skipDropdownReset);
       renderDashboard();
-      renderSalesHistory();
+      renderDebtsHistory();
       renderPaymentsHistory();
     }
 
@@ -1002,98 +867,59 @@
       document.getElementById("clientCount").innerText = clients.length;
     }
 
-    function renderInventory() {
-      const tbody = document.querySelector("#inventoryTable tbody");
-      tbody.innerHTML = "";
-      let totalStockValue = 0;
-
-      inventory.forEach(p => {
-        const itemVal = p.qty * p.cost;
-        totalStockValue += itemVal;
-        const isLow = p.qty < 10;
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><strong>${escapeHtml(p.name)}</strong></td>
-          <td>${escapeHtml(p.unit)}</td>
-          <td><strong>${p.qty}</strong></td>
-          <td>${p.cost.toLocaleString()} ج.م</td>
-          <td>${p.price.toLocaleString()} ج.م</td>
-          <td>${itemVal.toLocaleString()} ج.م</td>
-          <td><span class="badge ${isLow ? 'red' : 'green'}">${isLow ? 'مخزون منخفض' : 'متوفر'}</span></td>
-          <td>
-            <button class="btn btn-danger" onclick="deleteProduct('${p.id}')">🗑 حذف</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      document.getElementById("productCount").innerText = inventory.length;
-      document.getElementById("invStockTotalVal").innerText = totalStockValue.toLocaleString() + " ج.م";
-      document.getElementById("dashStockValue").innerText = totalStockValue.toLocaleString() + " ج.م";
-    }
-
     function renderDropdowns(skipDropdownReset) {
-      const saleClientSel = document.getElementById("saleClientSelect");
+      const debtClientSel = document.getElementById("debtClientSelect");
       const paymentClientSel = document.getElementById("paymentClientSelect");
-      const saleProductSel = document.getElementById("saleProductSelect");
-      const saleDateInput = document.getElementById("saleCustomDate");
+      const debtDateInput = document.getElementById("debtCustomDate");
       const paymentDateInput = document.getElementById("paymentCustomDate");
 
       // Remember what the user currently has selected/typed so a save
-      // elsewhere in the app doesn't wipe out an in-progress invoice/payment.
-      const prevSaleClient = saleClientSel.value;
+      // elsewhere in the app doesn't wipe out an in-progress entry.
+      const prevDebtClient = debtClientSel.value;
       const prevPaymentClient = paymentClientSel.value;
-      const prevSaleProduct = saleProductSel.value;
-      const prevSaleDate = saleDateInput.value;
+      const prevDebtDate = debtDateInput.value;
       const prevPaymentDate = paymentDateInput.value;
 
-      saleClientSel.innerHTML = '<option value="">اختر العميل</option>';
+      debtClientSel.innerHTML = '<option value="">اختر العميل</option>';
       paymentClientSel.innerHTML = '<option value="">اختر العميل</option>';
       clients.forEach(c => {
         const safeName = escapeHtml(c.name);
-        saleClientSel.innerHTML += `<option value="${c.id}">${safeName}</option>`;
+        debtClientSel.innerHTML += `<option value="${c.id}">${safeName}</option>`;
         paymentClientSel.innerHTML += `<option value="${c.id}">${safeName}</option>`;
-      });
-
-      saleProductSel.innerHTML = '<option value="">اختر الصنف</option>';
-      inventory.forEach(p => {
-        saleProductSel.innerHTML += `<option value="${p.id}">${escapeHtml(p.name)} (المتاح: ${p.qty} ${escapeHtml(p.unit)})</option>`;
       });
 
       if (skipDropdownReset) {
         // Restore prior selections only if they still exist in the refreshed lists
-        if (clients.some(c => c.id === prevSaleClient)) saleClientSel.value = prevSaleClient;
+        if (clients.some(c => c.id === prevDebtClient)) debtClientSel.value = prevDebtClient;
         if (clients.some(c => c.id === prevPaymentClient)) paymentClientSel.value = prevPaymentClient;
-        if (inventory.some(p => p.id === prevSaleProduct)) saleProductSel.value = prevSaleProduct;
-        saleDateInput.value = prevSaleDate || getCurrentFormattedDate();
+        debtDateInput.value = prevDebtDate || getCurrentFormattedDate();
         paymentDateInput.value = prevPaymentDate || getCurrentFormattedDate();
       } else {
         // First load / after an explicit reset: default dates to "now"
-        saleDateInput.value = getCurrentFormattedDate();
+        debtDateInput.value = getCurrentFormattedDate();
         paymentDateInput.value = getCurrentFormattedDate();
       }
     }
 
     function renderDashboard() {
-      let totalSales = 0;
+      let totalDebts = 0;
       let totalPaid = 0;
-      let totalDebt = 0;
+      let totalRemaining = 0;
 
       clients.forEach(c => {
         const { sales, paid, balance } = getClientTotals(c.id);
-        totalSales += sales;
+        totalDebts += sales;
         totalPaid += paid;
-        totalDebt += balance;
+        totalRemaining += balance;
       });
 
-      document.getElementById("dashTotalDebt").innerText = totalDebt.toLocaleString() + " ج.م";
+      document.getElementById("dashTotalDebt").innerText = totalRemaining.toLocaleString() + " ج.م";
       document.getElementById("dashTotalPaid").innerText = totalPaid.toLocaleString() + " ج.م";
       document.getElementById("dashClientCount").innerText = clients.length;
 
-      document.getElementById("rptSales").innerText = totalSales.toLocaleString() + " ج.م";
+      document.getElementById("rptDebtsIssued").innerText = totalDebts.toLocaleString() + " ج.م";
       document.getElementById("rptPayments").innerText = totalPaid.toLocaleString() + " ج.م";
-      document.getElementById("rptDebts").innerText = totalDebt.toLocaleString() + " ج.م";
+      document.getElementById("rptDebts").innerText = totalRemaining.toLocaleString() + " ج.م";
 
       // Top Debtors Table
       const topDebtorsTbody = document.querySelector("#topDebtorsTable tbody");
@@ -1129,29 +955,29 @@
 
       sortedTx.forEach(t => {
         const client = clients.find(c => c.id === t.clientId);
-        const amount = t.type === 'sale' ? t.amount : t.paid;
+        const amount = t.type === 'debt' ? t.amount : t.paid;
         recentTbody.innerHTML += `
           <tr>
             <td class="time-stamp">${escapeHtml(formatDateDisplay(t.date))}</td>
             <td><strong>${client ? escapeHtml(client.name) : 'عميل محذوف'}</strong></td>
-            <td><span class="badge ${t.type === 'sale' ? 'gold' : 'green'}">${t.type === 'sale' ? 'فاتورة بيع' : 'دفعة سداد'}</span></td>
+            <td><span class="badge ${t.type === 'debt' ? 'gold' : 'green'}">${t.type === 'debt' ? 'مديونية' : 'دفعة سداد'}</span></td>
             <td>${(amount || 0).toLocaleString()} ج.م</td>
           </tr>
         `;
       });
     }
 
-    function renderSalesHistory() {
-      const tbody = document.querySelector("#salesHistoryTable tbody");
+    function renderDebtsHistory() {
+      const tbody = document.querySelector("#debtsHistoryTable tbody");
       tbody.innerHTML = "";
-      const salesTx = transactions.filter(t => t.type === 'sale').sort((a, b) => new Date(b.date) - new Date(a.date));
+      const debtTx = transactions.filter(t => t.type === 'debt').sort((a, b) => new Date(b.date) - new Date(a.date));
 
-      if (salesTx.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#64748b">لا توجد فواتير مسجلة بعد</td></tr>`;
+      if (debtTx.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#64748b">لا توجد مديونيات مسجلة بعد</td></tr>`;
         return;
       }
 
-      salesTx.forEach(t => {
+      debtTx.forEach(t => {
         const client = clients.find(c => c.id === t.clientId);
         const remaining = (t.amount || 0) - (t.paid || 0);
         tbody.innerHTML += `
@@ -1192,6 +1018,29 @@
       });
     }
 
+    // --- CUSTOM CONFIRM DIALOG (works even if window.confirm() is sandboxed/blocked) ---
+    let _confirmCallback = null;
+    function askConfirm(message, callback) {
+      _confirmCallback = callback;
+      document.getElementById("confirmMessage").innerText = message;
+      openModal("confirmModal");
+    }
+    function closeConfirm() {
+      _confirmCallback = null;
+      closeModal("confirmModal");
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+      const btn = document.getElementById("confirmActionBtn");
+      if (btn) {
+        btn.addEventListener("click", function () {
+          const cb = _confirmCallback;
+          _confirmCallback = null;
+          closeModal("confirmModal");
+          if (typeof cb === "function") cb();
+        });
+      }
+    });
+
     // --- ACTIONS & TRANSACTIONS ---
     function addNewClient() {
       const nameInput = document.getElementById("newClientName");
@@ -1215,7 +1064,7 @@
           id: "t_" + Date.now(),
           date: getCurrentFormattedDate(),
           clientId: newId,
-          type: "sale",
+          type: "debt",
           details: "رصيد افتتاحي (مديونية سابقة)",
           amount: initialDebt,
           paid: 0
@@ -1232,139 +1081,62 @@
     }
 
     function deleteClient(id) {
-      if (confirm("هل أنت متأكد من حذف هذا العميل؟ سيؤدي ذلك لحذف سجله الكامل.")) {
+      askConfirm("هل أنت متأكد من حذف هذا العميل؟ سيؤدي ذلك لحذف سجله الكامل.", function () {
         clients = clients.filter(c => c.id !== id);
         transactions = transactions.filter(t => t.clientId !== id);
         saveState(true);
         showToast("تم حذف العميل وسجله بالكامل", "success");
-      }
-    }
-
-    function addNewProduct() {
-      const nameInput = document.getElementById("newProdName");
-      const name = nameInput.value.trim();
-      const unit = document.getElementById("newProdUnit").value;
-      const qty = Math.max(0, parseFloat(document.getElementById("newProdQty").value) || 0);
-      const cost = Math.max(0, parseFloat(document.getElementById("newProdCost").value) || 0);
-      const price = Math.max(0, parseFloat(document.getElementById("newProdPrice").value) || 0);
-
-      setFieldError("newProdNameGroup", !name);
-      if (!name) { showToast("يرجى كتابة اسم صنف الخشب", "error"); nameInput.focus(); return; }
-
-      inventory.push({
-        id: "p_" + Date.now(),
-        name, unit, qty, cost, price
       });
-
-      saveState(true);
-      closeModal("productModal");
-      showToast("تم إضافة الصنف للمخزن بنجاح", "success");
-      document.getElementById("newProdName").value = "";
-      document.getElementById("newProdQty").value = "";
-      document.getElementById("newProdCost").value = "";
-      document.getElementById("newProdPrice").value = "";
-      setFieldError("newProdNameGroup", false);
     }
 
-    function deleteProduct(id) {
-      if (confirm("هل أنت متأكد من حذف هذا الصنف من المخزن؟")) {
-        inventory = inventory.filter(p => p.id !== id);
-        saveState(true);
-        showToast("تم حذف الصنف من المخزن", "success");
-      }
+    function calculateDebt() {
+      const amount = Math.max(0, parseFloat(document.getElementById("debtAmount").value) || 0);
+      const paidNow = Math.max(0, parseFloat(document.getElementById("debtPaidNow").value) || 0);
+      const remaining = Math.max(0, amount - paidNow);
+
+      document.getElementById("debtPreviewAmount").innerText = amount.toLocaleString() + " ج.م";
+      document.getElementById("debtPreviewPaid").innerText = paidNow.toLocaleString() + " ج.م";
+      document.getElementById("debtPreviewRemaining").innerText = remaining.toLocaleString() + " ج.م";
     }
 
-    function onProductSelectChange() {
-      const pId = document.getElementById("saleProductSelect").value;
-      const prod = inventory.find(p => p.id === pId);
-      if (prod) {
-        document.getElementById("salePrice").value = prod.price;
-        document.getElementById("invProdName").innerText = prod.name;
-        setFieldError("saleProductGroup", false);
-      } else {
-        document.getElementById("invProdName").innerText = "-";
-      }
-      calculateInvoice();
+    function resetDebtForm() {
+      document.getElementById("debtClientSelect").value = "";
+      document.getElementById("debtAmount").value = "";
+      document.getElementById("debtPaidNow").value = "";
+      document.getElementById("debtDetails").value = "";
+      document.getElementById("debtCustomDate").value = getCurrentFormattedDate();
+      setFieldError("debtClientGroup", false);
+      setFieldError("debtAmountGroup", false);
+      calculateDebt();
     }
 
-    function calculateInvoice() {
-      const qty = Math.max(0, parseFloat(document.getElementById("saleQty").value) || 0);
-      const price = Math.max(0, parseFloat(document.getElementById("salePrice").value) || 0);
-      const discount = Math.max(0, parseFloat(document.getElementById("saleDiscount").value) || 0);
-      const paid = Math.max(0, parseFloat(document.getElementById("salePaid").value) || 0);
-
-      const subtotal = qty * price;
-      const total = Math.max(0, subtotal - discount);
-      const remaining = Math.max(0, total - paid);
-
-      document.getElementById("invQty").innerText = qty;
-      document.getElementById("invSubtotal").innerText = subtotal.toLocaleString();
-      document.getElementById("invGross").innerText = subtotal.toLocaleString() + " ج.م";
-      document.getElementById("invDiscount").innerText = discount.toLocaleString() + " ج.م";
-      document.getElementById("invTotal").innerText = total.toLocaleString() + " ج.م";
-      document.getElementById("invPaid").innerText = paid.toLocaleString() + " ج.م";
-      document.getElementById("invRemaining").innerText = remaining.toLocaleString() + " ج.م";
-    }
-
-    function resetInvoiceForm() {
-      document.getElementById("saleClientSelect").value = "";
-      document.getElementById("saleProductSelect").value = "";
-      document.getElementById("saleQty").value = 1;
-      document.getElementById("salePrice").value = 0;
-      document.getElementById("saleDiscount").value = 0;
-      document.getElementById("salePaid").value = 0;
-      document.getElementById("invProdName").innerText = "-";
-      document.getElementById("saleCustomDate").value = getCurrentFormattedDate();
-      setFieldError("saleClientGroup", false);
-      setFieldError("saleProductGroup", false);
-      setFieldError("saleQtyGroup", false);
-      calculateInvoice();
-    }
-
-    function saveInvoice() {
-      const cId = document.getElementById("saleClientSelect").value;
-      const pId = document.getElementById("saleProductSelect").value;
-      const customDate = document.getElementById("saleCustomDate").value || getCurrentFormattedDate();
-      const qty = Math.max(0, parseFloat(document.getElementById("saleQty").value) || 0);
-      const price = Math.max(0, parseFloat(document.getElementById("salePrice").value) || 0);
-      const discount = Math.max(0, parseFloat(document.getElementById("saleDiscount").value) || 0);
-      const paid = Math.max(0, parseFloat(document.getElementById("salePaid").value) || 0);
+    function saveDebt() {
+      const cId = document.getElementById("debtClientSelect").value;
+      const customDate = document.getElementById("debtCustomDate").value || getCurrentFormattedDate();
+      const amount = Math.max(0, parseFloat(document.getElementById("debtAmount").value) || 0);
+      const paidNow = Math.max(0, parseFloat(document.getElementById("debtPaidNow").value) || 0);
+      const details = document.getElementById("debtDetails").value.trim() || "مديونية مسجلة";
 
       let hasError = false;
-      setFieldError("saleClientGroup", !cId);
-      setFieldError("saleProductGroup", !pId);
-      setFieldError("saleQtyGroup", qty <= 0);
+      setFieldError("debtClientGroup", !cId);
+      setFieldError("debtAmountGroup", amount <= 0);
       if (!cId) { showToast("يرجى اختيار العميل أولاً", "error"); hasError = true; }
-      if (!pId) { showToast("يرجى اختيار الصنف أولاً", "error"); hasError = true; }
-      if (qty <= 0) { showToast("أدخل كمية صحيحة أكبر من صفر", "error"); hasError = true; }
+      if (amount <= 0) { showToast("أدخل مبلغاً صحيحاً أكبر من صفر", "error"); hasError = true; }
       if (hasError) return;
 
-      const prod = inventory.find(p => p.id === pId);
-      if (!prod) { showToast("الصنف المختار لم يعد موجوداً بالمخزن", "error"); return; }
-      if (prod.qty < qty) { showToast("الكمية المطلوبة غير متوفرة في المخزن! المتاح: " + prod.qty, "error"); return; }
-
-      const subtotal = qty * price;
-      const totalInvoice = Math.max(0, subtotal - discount);
-
-      // Deduct Stock
-      prod.qty -= qty;
-
-      // Add Sale Transaction
       transactions.push({
         id: "t_" + Date.now(),
         date: customDate,
         clientId: cId,
-        productId: pId,
-        qty: qty,
-        type: "sale",
-        details: `فاتورة: ${prod.name} (عدد ${qty} ${prod.unit})`,
-        amount: totalInvoice,
-        paid: paid
+        type: "debt",
+        details: details,
+        amount: amount,
+        paid: paidNow
       });
 
       saveState(true);
-      resetInvoiceForm();
-      showToast("تم حفظ الفاتورة بنجاح وتحديث حساب العميل والمخزون", "success");
+      resetDebtForm();
+      showToast("تم حفظ المديونية بنجاح وتحديث حساب العميل", "success");
     }
 
     function resetPaymentForm() {
@@ -1407,17 +1179,11 @@
     }
 
     function deleteTransaction(tId) {
-      if (confirm("هل أنت متأكد من حذف هذه العملية؟ سيتم تعديل رصيد العميل وتواريخ الكشف تلقائياً.")) {
-        const tx = transactions.find(t => t.id === tId);
-        // If it was a sale, restore inventory
-        if (tx && tx.type === 'sale' && tx.productId && tx.qty) {
-          const prod = inventory.find(p => p.id === tx.productId);
-          if (prod) prod.qty += tx.qty;
-        }
+      askConfirm("هل أنت متأكد من حذف هذه العملية؟ سيتم تعديل رصيد العميل وتواريخ الكشف تلقائياً.", function () {
         transactions = transactions.filter(t => t.id !== tId);
         saveState(true);
         showToast("تم حذف العملية وتحديث الأرصدة", "success");
-      }
+      });
     }
 
     // --- DETAILED STATEMENT MODAL (DETAILED TIMELINE LOG) ---
@@ -1442,7 +1208,7 @@
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#64748b">لا توجد حركات مسجلة لهذا العميل حتى الآن</td></tr>`;
       } else {
         clientTx.forEach(t => {
-          const debit = t.type === 'sale' ? (t.amount || 0) : 0;
+          const debit = t.type === 'debt' ? (t.amount || 0) : 0;
           const credit = t.paid || 0;
 
           runningBalance += (debit - credit);
@@ -1452,7 +1218,7 @@
           tbody.innerHTML += `
             <tr>
               <td class="time-stamp">${escapeHtml(formatDateDisplay(t.date))}</td>
-              <td><span class="badge ${t.type === 'sale' ? 'gold' : 'green'}">${t.type === 'sale' ? 'فاتورة/مدين' : 'تحصيل/دائن'}</span></td>
+              <td><span class="badge ${t.type === 'debt' ? 'gold' : 'green'}">${t.type === 'debt' ? 'مديونية/مدين' : 'تحصيل/دائن'}</span></td>
               <td>${escapeHtml(t.details)}</td>
               <td style="color:${debit > 0 ? '#dc2626' : '#1e293b'}">${debit > 0 ? '+' + debit.toLocaleString() + ' ج.م' : '-'}</td>
               <td style="color:${credit > 0 ? '#16a34a' : '#1e293b'}">${credit > 0 ? '-' + credit.toLocaleString() + ' ج.م' : '-'}</td>
@@ -1480,9 +1246,8 @@
       const titles = {
         dashboard: "لوحة التحكم",
         clients: "إدارة العملاء وكشوف الحسابات",
-        sales: "فاتورة مبيعات جديدة",
+        debts: "تسجيل مديونية جديدة",
         payments: "سندات التحصيل والدفعات",
-        inventory: "المخزون والأصناف",
         reports: "التقارير المالية"
       };
       document.getElementById("pageTitle").innerText = titles[page];
